@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquidación Tech | Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+        .bg-orange-brand { background-color: #F97316; }
+        .text-orange-brand { color: #F97316; }
+        .hover-orange-brand:hover { background-color: #EA580C; }
+        .fade-in { animation: fadeIn 0.4s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .hero-search { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at top, #fff 0%, #fff7ed 100%); }
+    </style>
+</head>
+<body>
+
+    <section id="search-screen" class="hero-search px-6 py-12">
+        <div class="max-w-4xl w-full text-center fade-in">
+            <h1 class="text-5xl md:text-8xl font-black text-gray-900 mb-6 tracking-tighter leading-none">
+                BUSCA TU <span class="text-orange-brand">OFERTA</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 mb-10">Stock limitado por cierre de tiendas departamentales.</p>
+            
+            <div class="relative max-w-2xl mx-auto shadow-2xl rounded-3xl overflow-hidden border-4 border-orange-brand bg-white">
+                <div class="flex flex-col md:flex-row">
+                    <input type="text" id="main-input" placeholder="¿Qué deseas comprar?" 
+                        class="w-full px-6 py-5 md:py-7 text-xl md:text-2xl border-none focus:ring-0 outline-none"
+                        onkeyup="checkSearch(event)">
+                    <button onclick="revealCatalog()" class="w-full md:w-auto md:absolute md:right-2 md:top-2 md:bottom-2 px-10 py-4 md:py-0 bg-orange-brand text-white font-black rounded-xl md:rounded-2xl hover-orange-brand transition-all text-lg">
+                        BUSCAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalog-screen" class="hidden fade-in">
+        <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+                <div class="text-xl font-black text-orange-brand tracking-tighter"><span class="text-gray-900"></span></div>
+                <div class="flex items-center space-x-3 md:space-x-6">
+                    <span class="text-[10px] md:text-xs font-bold text-red-600 animate-pulse uppercase">Ofertas Flash</span>
+                    <div class="h-8 w-8 md:h-10 md:w-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-brand font-bold">🛒</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+            <div id="main-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
+                </div>
+            
+            <div class="mt-16 py-10 text-center text-gray-300 font-bold uppercase tracking-widest border-t border-gray-100 text-xs">
+                Fin del catálogo
+            </div>
+        </main>
+    </section>
+
+    <div id="productModal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+            <div class="h-64 md:h-auto md:w-1/2 bg-gray-50 flex items-center justify-center overflow-hidden">
+                <img id="modalImg" src="" class="w-full h-full object-cover">
+            </div>
+            
+            <div class="flex-1 p-6 md:p-12 relative overflow-y-auto">
+                <button onclick="closeModal()" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-gray-900 text-3xl md:text-4xl">&times;</button>
+                <div id="modalStars" class="flex mb-3 md:mb-4"></div>
+                <h2 id="modalTitle" class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
+                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-orange-brand mb-6 md:mb-8"></p>
+                <div class="bg-orange-50 text-orange-700 p-4 rounded-2xl text-xs md:text-sm font-bold mb-6 flex items-center">
+                    <span class="mr-2 text-xl">⚡</span> Envío gratis hoy.
+                </div>
+                <button onclick="showConfirm()" class="w-full bg-orange-brand text-white font-black py-4 md:py-5 rounded-2xl hover-orange-brand transition-all shadow-xl shadow-orange-200 text-lg">
+                    COMPRAR AHORA
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="fixed inset-0 bg-black/60 hidden z-[70] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 md:p-10 max-w-sm w-full text-center">
+            <h3 class="text-xl md:text-2xl font-bold mb-4">¿Realizar pedido?</h3>
+            <p class="text-gray-500 mb-8 text-sm md:text-base">Esta es una oferta única de liquidación.</p>
+            <div class="flex space-x-4">
+                <button onclick="closeConfirm()" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold text-gray-400">No</button>
+                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-orange-brand text-white rounded-2xl font-bold">Sí, comprar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="fixed inset-0 bg-black/60 hidden z-[80] flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-10 md:p-12 max-w-sm w-full text-center">
+            <div class="w-16 h-16 md:w-20 md:h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl md:text-4xl font-bold">✓</div>
+            <h3 class="text-xl md:text-2xl font-black mb-2">PAGO RECIBIDO</h3>
+            <p class="text-gray-500 italic text-sm">Procesando envío...</p>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: 'Samsung Galaxy S24 Ultra', price: '$499.00', stars: 5, url: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800' },
+            { id: 2, name: 'iPhone 14 Pro Deep Purple', price: '$420.00', stars: 5, url: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?auto=format&fit=crop&w=800' },
+            { id: 3, name: 'Google Pixel 8 Pro Obsidian', price: '$350.00', stars: 4, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuL_2KMB3ASSNyjXhXvWf-Mengtpl98LP8Tg&s' },
+            { id: 4, name: 'AirPods Max Silver', price: '$180.00', stars: 5, url: 'https://i.ebayimg.com/images/g/dNkAAOSwqt5luY9c/s-l1200.jpg' },
+            { id: 5, name: 'Xiaomi 13 Ultra Leica', price: '$390.00', stars: 5, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn1wOThra4g3w2kH2smzWhYldP7zAy2ZVuZw&s' },
+            { id: 6, name: 'Apple Watch Ultra 2', price: '$250.00', stars: 5, url: 'https://hips.hearstapps.com/hmg-prod/images/apple-watch-ultra-2-set-up-6750636a674e4.jpeg?resize=640:*' },
+            { id: 7, name: 'Nothing Phone (2) Glyph', price: '$220.00', stars: 4, url: 'https://www.designboom.com/wp-content/uploads/2023/07/nothing-phone-2-new-glyph-designboom-01.jpg' },
+            { id: 8, name: 'Sony Xperia 1 V Pro', price: '$480.00', stars: 5, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtePYgPtZQPL7D2EF13QU1oYConWNBgBFNWg&s' },
+            { id: 9, name: 'Auriculares Hi-Fi Wireless', price: '$45.00', stars: 3, url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800' },
+            { id: 10, name: 'Huawei P60 Pro Green', price: '$310.00', stars: 4, url: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800' },
+            { id: 11, name: 'Tablet 11" 4K HDR', price: '$150.00', stars: 5, url: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800' },
+            { id: 12, name: 'Cargador 100W GaN', price: '$19.00', stars: 4, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7CrbobEFDmQp7RlAy2PoJdpq7lddYQnr7LA&s' },
+            { id: 13, name: 'Motorola Edge 40', price: '$240.00', stars: 4, url: 'https://armoto.vtexassets.com/arquivos/ids/164313-800-800?v=638754262110970000&width=800&height=800&aspect=true' },
+            { id: 14, name: 'Batería Magsafe 10K', price: '$22.00', stars: 5, url: 'https://images.unsplash.com/photo-1615526675159-e248c3021d3f?auto=format&fit=crop&w=800' },
+            { id: 15, name: 'Oppo Find X6 Pro', price: '$370.00', stars: 5, url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800' },
+            { id: 16, name: 'ZTE Nubia Z50S', price: '$290.00', stars: 4, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX9l4EV2ZYNpU1NEnqiiuydxBLuRaOmBpQQQ&s' },
+            { id: 17, name: 'Monitor Portable 15"', price: '$85.00', stars: 3, url: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800' },
+            { id: 18, name: 'Estabilizador (Gimbal)', price: '$55.00', stars: 5, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX2r_rsUbixddcZX4ImTuNLYbuDx9TlJ4HmA&s' },
+            { id: 19, name: 'Lente para Celular HD', price: '$12.00', stars: 4, url: 'https://m.media-amazon.com/images/I/612q5f9bz3L._AC_UF1000,1000_QL80_.jpg' },
+            { id: 20, name: 'Altavoz Bluetooth Pro', price: '$38.00', stars: 5, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6uxWuGGp_ATMcdgWf7GH_QXRDds03qQ598A&s' },
+            { id: 21, name: 'Asus Zenfone 10 Mini', price: '$320.00', stars: 4, url: 'https://www.cnet.com/a/img/resize/15cf3ce2211f58e0af0074c16dc6a58c919e3fb8/hub/2023/06/28/67b3b6e2-9879-48cf-b9ac-e230a8d72cfb/asus-zenfone-10-cnet-09.jpg?auto=webp&fit=crop&height=1200&width=1200' },
+            { id: 22, name: 'iPhone 15 Pro Max 1TB (NUEVO)', price: '$200.99', stars: 5, url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800' },
+            { id: 23, name: 'Adaptador Lightning a USB', price: '$5.00', stars: 4, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz1yBSqHH9t5UmBRXegocQ98bOpba7rb5TiQ&s' },
+            { id: 24, name: 'Kit Limpieza Pantallas', price: '$3.00', stars: 5, url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYrbqyaI2jBc0iG9v-95q5qmwPQAZiyR-CvA&s' }
+        ];
+
+        function checkSearch(e) {
+            const val = e.target.value.toLowerCase();
+            if ((val.includes('celular') || val.includes('iphone') || val.includes('tele')) && e.key === 'Enter') {
+                revealCatalog();
+            }
+        }
+
+        function revealCatalog() {
+            document.getElementById('search-screen').classList.add('hidden');
+            document.getElementById('catalog-screen').classList.remove('hidden');
+            renderGrid();
+            window.scrollTo(0,0);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('main-grid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-xl transition-all duration-500 cursor-pointer group";
+                if(p.id === 22) card.className += " border-2 border-red-500 ring-4 ring-red-50";
+                
+                card.onclick = () => openModal(p);
+                card.innerHTML = `
+                    <div class="h-64 bg-gray-200 overflow-hidden relative">
+                        <img src="${p.url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        ${p.id === 22 ? '<span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full animate-bounce">OFERTA DE ERROR</span>' : ''}
+                    </div>
+                    <div class="p-6">
+                        <div class="flex space-x-1 mb-2">${getStarsHTML(p.stars)}</div>
+                        <h3 class="font-bold text-gray-900 mb-4 h-12 line-clamp-2 leading-tight">${p.name}</h3>
+                        <div class="flex items-end justify-between">
+                            <span class="text-2xl font-black text-orange-brand">${p.price}</span>
+                            <div class="w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center font-bold text-xl group-hover:bg-orange-brand transition">+</div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function getStarsHTML(count) {
+            let h = '';
+            for(let i=0; i<5; i++) h += `<span class="${i<count?'text-orange-400':'text-gray-200'} text-lg">★</span>`;
+            return h;
+        }
+
+        function openModal(p) {
+            document.getElementById('modalTitle').innerText = p.name;
+            document.getElementById('modalPrice').innerText = p.price;
+            document.getElementById('modalImg').src = p.url;
+            document.getElementById('modalStars').innerHTML = getStarsHTML(p.stars);
+            document.getElementById('productModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() { 
+            document.getElementById('productModal').classList.add('hidden'); 
+            document.body.style.overflow = 'auto'; 
+        }
+
+        function showConfirm() { document.getElementById('confirmModal').classList.remove('hidden'); }
+        function closeConfirm() { document.getElementById('confirmModal').classList.add('hidden'); }
+
+        function processFinalBuy() {
+            closeConfirm(); closeModal();
+            document.getElementById('successModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('successModal').classList.add('hidden');
+                document.getElementById('catalog-screen').classList.add('hidden');
+                document.getElementById('search-screen').classList.remove('hidden');
+                document.getElementById('main-input').value = '';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
