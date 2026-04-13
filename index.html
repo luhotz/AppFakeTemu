@@ -189,18 +189,33 @@
             setTimeout(() => m.classList.add('hidden'), 200);
         }
 
-        function processFinalBuy() {
+function processFinalBuy() {
+            // 1. Cerramos el modal de confirmación
             closeConfirm();
+            
+            // 2. Mostramos el modal de éxito
             const s = document.getElementById('successModal');
             s.classList.remove('hidden');
             setTimeout(() => s.classList.add('modal-active'), 10);
 
-            // Regresar al catálogo después de 2 segundos
+            // 3. Tras 2 segundos, limpiamos todo pero NOS QUEDAMOS en el catálogo
             setTimeout(() => {
+                // Quitamos animación de éxito
                 s.classList.remove('modal-active');
+                
                 setTimeout(() => {
                     s.classList.add('hidden');
-                    closeModal(); // Cierra el modal de producto también
+                    
+                    // IMPORTANTE: Cerramos el modal del producto para que se vea el catálogo
+                    const pm = document.getElementById('productModal');
+                    pm.classList.remove('modal-active');
+                    setTimeout(() => {
+                        pm.classList.add('hidden');
+                        document.body.style.overflow = 'auto'; // Devolvemos el scroll al catálogo
+                    }, 200);
+                    
+                    // AQUÍ ESTABA EL ERROR: Ya NO llamamos a ocultar 'catalog-screen' 
+                    // ni a mostrar 'search-screen'. Simplemente nos quedamos donde estamos.
                 }, 200);
             }, 2000);
         }
