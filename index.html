@@ -12,7 +12,6 @@
         .text-orange-brand { color: #F97316; }
         .hover-orange-brand:hover { background-color: #EA580C; }
         
-        /* Transiciones rápidas y limpias */
         .transition-fast { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         
@@ -21,7 +20,6 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* Efecto de escala para modales */
         .modal-scale { transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out; }
         .modal-active .modal-scale { transform: scale(1); opacity: 1; }
 
@@ -62,8 +60,7 @@
         </header>
 
         <main class="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 fade-in">
-            <div id="main-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-                </div>
+            <div id="main-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"></div>
             <div class="mt-16 py-10 text-center text-gray-300 font-bold uppercase tracking-widest border-t border-gray-100 text-xs">Fin del catálogo</div>
         </main>
     </section>
@@ -75,22 +72,37 @@
             </div>
             <div class="flex-1 p-6 md:p-12 relative overflow-y-auto bg-white border-l border-gray-50">
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl">&times;</button>
-                <div id="modalStars" class="flex mb-3 text-orange-400">★★★★★</div>
+                
+                <div id="ratings-container" class="mb-4 hidden">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex text-orange-400 text-sm">★★★★★</div>
+                        <span id="product-revs" class="text-xs text-gray-400 font-bold"></span>
+                    </div>
+                    <div id="seller-rating" class="hidden mt-2 pt-2 border-t border-gray-50">
+                        <p class="text-[10px] text-gray-400 uppercase font-black mb-1">Calificación del Vendedor</p>
+                        <div class="flex items-center space-x-2">
+                            <div class="flex text-blue-500 text-sm">★★★★★</div>
+                            <span class="text-xs text-blue-600 font-black">4.9 (4.5k+ calificaciones)</span>
+                        </div>
+                    </div>
+                </div>
+
                 <h2 id="modalTitle" class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
-                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-orange-brand mb-6"></p>
-                <div class="bg-orange-50 text-orange-700 p-4 rounded-2xl text-xs font-bold mb-6">⚡ Oferta válida por tiempo limitado.</div>
-                <button onclick="showConfirm()" class="w-full bg-orange-brand text-white font-black py-4 rounded-2xl hover-orange-brand transition-fast shadow-xl shadow-orange-200 text-lg uppercase tracking-wider">Comprar ahora</button>
+                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-orange-brand mb-4"></p>
+                <div id="modalDesc" class="text-gray-500 text-sm mb-6 leading-relaxed"></div>
+                <div class="bg-orange-50 text-orange-700 p-4 rounded-2xl text-xs font-bold mb-6 italic">⚡ Oferta de liquidación por cierre de sucursal.</div>
+                <button onclick="showConfirm()" class="w-full bg-orange-brand text-white font-black py-4 rounded-2xl hover-orange-brand transition-fast shadow-xl shadow-orange-200 text-lg uppercase">Comprar ahora</button>
             </div>
         </div>
     </div>
 
     <div id="confirmModal" class="fixed inset-0 bg-black/60 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm transition-fast">
         <div class="modal-scale bg-white rounded-3xl p-8 max-w-sm w-full text-center">
-            <h3 class="text-xl font-bold mb-4 uppercase tracking-tighter">¿Confirmar pedido?</h3>
+            <h3 class="text-xl font-bold mb-4 uppercase">¿Confirmar pedido?</h3>
             <p class="text-gray-500 mb-8 text-sm">Esta acción procesará su pago de forma segura y permanente.</p>
             <div class="flex space-x-4">
-                <button onclick="closeConfirm()" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold text-gray-400 hover:bg-gray-200 transition-fast uppercase text-xs">Cancelar</button>
-                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-orange-brand text-white rounded-2xl font-bold hover-orange-brand transition-fast uppercase text-xs">Sí, comprar</button>
+                <button onclick="closeConfirm()" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold text-gray-400 uppercase text-xs">Cancelar</button>
+                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-orange-brand text-white rounded-2xl font-bold uppercase text-xs">Sí, comprar</button>
             </div>
         </div>
     </div>
@@ -105,26 +117,26 @@
 
     <script>
         const products = [
-            { id: 1, name: 'Samsung Galaxy S24 Ultra', price: '$499.00', url: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800' },
-            { id: 2, name: 'iPhone 14 Pro Deep Purple', price: '$420.00', url: 'https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?auto=format&fit=crop&w=800' },
-            { id: 3, name: 'Google Pixel 8 Pro Obsidian', price: '$350.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuL_2KMB3ASSNyjXhXvWf-Mengtpl98LP8Tg&s' },
-            { id: 4, name: 'AirPods Max Silver', price: '$180.00', url: 'https://i.ebayimg.com/images/g/dNkAAOSwqt5luY9c/s-l1200.jpg' },
-            { id: 5, name: 'Xiaomi 13 Ultra Leica', price: '$390.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn1wOThra4g3w2kH2smzWhYldP7zAy2ZVuZw&s' },
-            { id: 6, name: 'Apple Watch Ultra 2', price: '$250.00', url: 'https://hips.hearstapps.com/hmg-prod/images/apple-watch-ultra-2-set-up-6750636a674e4.jpeg?resize=640:*' },
-            { id: 7, name: 'Nothing Phone (2) Glyph', price: '$220.00', url: 'https://www.designboom.com/wp-content/uploads/2023/07/nothing-phone-2-new-glyph-designboom-01.jpg' },
-            { id: 8, name: 'Sony Xperia 1 V Pro', price: '$480.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtePYgPtZQPL7D2EF13QU1oYConWNBgBFNWg&s' },
-            { id: 12, name: 'Cargador 100W GaN', price: '$19.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7CrbobEFDmQp7RlAy2PoJdpq7lddYQnr7LA&s' },
-            { id: 13, name: 'Motorola Edge 40', price: '$240.00', url: 'https://armoto.vtexassets.com/arquivos/ids/164313-800-800?v=638754262110970000&width=800&height=800&aspect=true' },
-            { id: 18, name: 'Estabilizador (Gimbal)', price: '$55.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX2r_rsUbixddcZX4ImTuNLYbuDx9TlJ4HmA&s' },
-            { id: 21, name: 'Asus Zenfone 10 Mini', price: '$320.00', url: 'https://www.cnet.com/a/img/resize/15cf3ce2211f58e0af0074c16dc6a58c919e3fb8/hub/2023/06/28/67b3b6e2-9879-48cf-b9ac-e230a8d72cfb/asus-zenfone-10-cnet-09.jpg?auto=webp&fit=crop&height=1200&width=1200' },
-            { id: 22, name: 'iPhone 15 Pro Max 1TB (NUEVO)', price: '$17.99', url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800' },
-            { id: 23, name: 'Adaptador Lightning a USB', price: '$5.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz1yBSqHH9t5UmBRXegocQ98bOpba7rb5TiQ&s' },
-            { id: 24, name: 'Kit Limpieza Pantallas', price: '$3.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYrbqyaI2jBc0iG9v-95q5qmwPQAZiyR-CvA&s' }
+            { id: 1, name: 'Nova Z-24 Pro Max Ultra', price: '$499.00', url: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800' },
+            { id: 2, name: 'X-Phone 14 Phantom Edition', price: '$420.00', url: 'https://s.alicdn.com/@sc04/kf/Hdf9f84e06f774f7cb01e36d6a22ae5e1Z/Custom-Cell-Phone-Unlocked-Smartphones-Cheap-3G-Generic-Smart-Mobile-Phone-Low-Price-Android-Smartphone-Odm.jpg_300x300.jpg' },
+            { id: 3, name: 'Omni Pixel Gen-8 Obsidian', price: '$350.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuL_2KMB3ASSNyjXhXvWf-Mengtpl98LP8Tg&s' },
+            { id: 4, name: 'Electrax Max Wireless', price: '$180.00', url: 'https://i.ebayimg.com/images/g/dNkAAOSwqt5luY9c/s-l1200.jpg' },
+            { id: 5, name: 'Kinetix 13 Ultra Vision', price: '$390.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn1wOThra4g3w2kH2smzWhYldP7zAy2ZVuZw&s' },
+            { id: 6, name: 'Titan Chrono Watch S2', price: '$250.00', url: 'https://hips.hearstapps.com/hmg-prod/images/apple-watch-ultra-2-set-up-6750636a674e4.jpeg?resize=640:*' },
+            { id: 7, name: 'Void Core Phone (2) Glow', price: '$220.00', url: 'https://www.designboom.com/wp-content/uploads/2023/07/nothing-phone-2-new-glyph-designboom-01.jpg' },
+            { id: 8, name: 'Vantage Xperia Pro-V', price: '$480.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtePYgPtZQPL7D2EF13QU1oYConWNBgBFNWg&s' },
+            { id: 12, name: 'HyperCharge 100W Power', price: '$19.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSzGMaOnKwCySES9IehZBDMMRysoABwvKZPA&s' },
+            { id: 13, name: 'Horizon Sharp 40 Curved Display', price: '$240.00', url: 'https://armoto.vtexassets.com/arquivos/ids/164313-800-800?v=638754262110970000&width=800&height=800&aspect=true', 
+              desc: 'Pantalla pOLED Curva de 144Hz, Procesador Octa-Core de 2.5GHz, 8GB RAM + 256GB Almacenamiento. Cámara Triple de 50MP con OIS y Carga Rápida de 68W TurboPower. Resistente al agua IP68.',
+              special: true },
+            { id: 18, name: 'Axis Stabilizer Pro ', price: '$55.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX2r_rsUbixddcZX4ImTuNLYbuDx9TlJ4HmA&s' },
+            { id: 21, name: 'Zenith Mini Smart 10', price: '$320.00', url: 'https://www.cnet.com/a/img/resize/15cf3ce2211f58e0af0074c16dc6a58c919e3fb8/hub/2023/06/28/67b3b6e2-9879-48cf-b9ac-e230a8d72cfb/asus-zenfone-10-cnet-09.jpg?auto=webp&fit=crop&height=1200&width=1200' },
+            { id: 22, name: 'Apex Phone 15 Pro Max 1TB', price: '$17.99', url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800' },
+            { id: 23, name: 'LinkCore USB Adapter', price: '$5.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz1yBSqHH9t5UmBRXegocQ98bOpba7rb5TiQ&s' },
+            { id: 24, name: 'PureView Screen Kit', price: '$3.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYrbqyaI2jBc0iG9v-95q5qmwPQAZiyR-CvA&s' }
         ];
 
-        function checkSearch(e) {
-            if (e.key === 'Enter') revealCatalog();
-        }
+        function checkSearch(e) { if (e.key === 'Enter') revealCatalog(); }
 
         function revealCatalog() {
             document.getElementById('search-screen').classList.add('hidden');
@@ -140,21 +152,19 @@
                 card.className = "bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-xl transition-fast cursor-pointer group fade-in";
                 card.style.animationDelay = `${index * 0.05}s`;
                 if(p.id === 22) card.className += " border-2 border-red-500 ring-4 ring-red-50";
-                
                 card.onclick = () => openModal(p);
                 card.innerHTML = `
                     <div class="h-56 bg-white overflow-hidden relative p-6 flex items-center justify-center">
                         <img src="${p.url}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-fast">
-                        ${p.id === 22 ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce">OFERTA</span>' : ''}
+                        ${p.id === 22 ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase">Oferta</span>' : ''}
                     </div>
-                    <div class="p-5 border-t border-gray-50">
+                    <div class="p-5 border-t border-gray-50 text-center">
                         <h3 class="font-bold text-gray-900 mb-4 h-10 line-clamp-2 text-sm leading-tight">${p.name}</h3>
                         <div class="flex items-end justify-between">
                             <span class="text-xl font-black text-orange-brand">${p.price}</span>
                             <div class="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-lg">+</div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 grid.appendChild(card);
             });
         }
@@ -164,6 +174,20 @@
             document.getElementById('modalTitle').innerText = p.name;
             document.getElementById('modalPrice').innerText = p.price;
             document.getElementById('modalImg').src = p.url;
+            document.getElementById('modalDesc').innerText = p.desc || 'Edición limitada con acabado premium. Incluye garantía extendida por 12 meses.';
+            
+            const ratingsContainer = document.getElementById('ratings-container');
+            const revSpan = document.getElementById('product-revs');
+            const sellerBox = document.getElementById('seller-rating');
+            
+            if(p.id === 13) {
+                ratingsContainer.classList.remove('hidden');
+                revSpan.innerText = "(1.1k+ calificaciones)";
+                sellerBox.classList.remove('hidden');
+            } else {
+                ratingsContainer.classList.add('hidden');
+            }
+
             m.classList.remove('hidden');
             setTimeout(() => m.classList.add('modal-active'), 10);
             document.body.style.overflow = 'hidden';
@@ -193,7 +217,6 @@
             const s = document.getElementById('successModal');
             s.classList.remove('hidden');
             setTimeout(() => s.classList.add('modal-active'), 10);
-
             setTimeout(() => {
                 s.classList.remove('modal-active');
                 setTimeout(() => {
