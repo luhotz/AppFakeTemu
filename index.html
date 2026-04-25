@@ -128,9 +128,9 @@
 
     <div id="productModal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-sm transition-fast">
         <div class="modal-scale bg-white rounded-[2rem] max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
-            <div class="h-48 md:h-auto md:w-1/2 bg-white flex items-center justify-center p-4">
-                <img id="modalImg" src="" class="max-w-full max-h-full object-contain">
-            </div>
+<div id="modalImageContainer" class="h-48 md:h-auto md:w-1/2 bg-white flex items-center justify-center p-4">
+    <img id="modalImg" src="" class="max-w-full max-h-full object-contain">
+</div>
             <div id="modalMainContent" class="flex-1 p-6 md:p-8 relative overflow-y-auto bg-white border-l border-gray-50 flex flex-col">
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl">&times;</button>
                 
@@ -177,7 +177,7 @@
             { id: 2, name: '', price: '$420.00', url: 'img/34733.jpg' },
             { id: 3, name: '', price: '$350.00', url: 'img/34738.jpg' },
             { id: 4, name: '', price: '$280.00', url: 'img/43676.jpg' },
-            { id: 5, name: '', price: '$390.00', url: 'img/1359611_181105-OX1G0W-608.jpg' },
+            { id: 5, name: '', price: '$390.00', url: 'img/IMG-20260424-WA0028.jpg' },
             { id: 6, name: '', price: '$250.00', url: 'img/3425273_59975.jpg' },
             { id: 7, name: ' ', price: '$650.00', url: 'img/10172882.png' },
             { id: 8, name: '', price: '$480.00', url: 'img/95230902_Smart Phone Flat Style.jpg' },
@@ -315,26 +315,33 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function showConfirmStep() {
-            document.getElementById('modalMainContent').classList.add('hidden');
-            document.getElementById('modalConfirmStep').classList.remove('hidden');
-        }
+function showConfirmStep() {
+    document.getElementById('modalMainContent').classList.add('hidden');
+    document.getElementById('modalConfirmStep').classList.remove('hidden');
+}
 
-        function hideConfirmStep() {
-            document.getElementById('modalMainContent').classList.remove('hidden');
-            document.getElementById('modalConfirmStep').classList.add('hidden');
-            document.getElementById('modalSuccessStep').classList.add('hidden');
-        }
+function hideConfirmStep() {
+    // Al resetear el modal, debemos asegurarnos que la imagen vuelva a ser visible
+    document.getElementById('modalImageContainer').classList.remove('hidden');
+    document.getElementById('modalMainContent').classList.remove('hidden');
+    document.getElementById('modalConfirmStep').classList.add('hidden');
+    document.getElementById('modalSuccessStep').classList.add('hidden');
+}
 
-        function processPurchase() {
-            document.getElementById('modalConfirmStep').classList.add('hidden');
-            document.getElementById('modalSuccessStep').classList.remove('hidden');
-            
-            // Regresar al catálogo automáticamente después de 1.8 segundos
-            setTimeout(() => {
-                closeModal();
-            }, 1800);
-        }
+function processPurchase() {
+    // 1. Ocultamos el paso de confirmación
+    document.getElementById('modalConfirmStep').classList.add('hidden');
+    
+    // 2. Ocultamos el contenedor de la IMAGEN para que el éxito sea pantalla completa
+    document.getElementById('modalImageContainer').classList.add('hidden');
+    
+    // 3. Mostramos el mensaje de éxito
+    document.getElementById('modalSuccessStep').classList.remove('hidden');
+    
+    setTimeout(() => {
+        closeModal();
+    }, 1800);
+}
 
         function closeModal() {
             const m = document.getElementById('productModal');
