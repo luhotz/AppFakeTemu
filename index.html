@@ -8,9 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #ffffff; overflow-x: hidden; }
-        .bg-orange-brand { background-color: #F97316; }
-        .text-orange-brand { color: #F97316; }
-        .hover-orange-brand:hover { background-color: #EA580C; }
+        
+
+        .bg-green-brand { background-color: #064e3b; } 
+        .text-green-brand { color: #064e3b; }
+        .hover-green-brand:hover { background-color: #065f46; } 
+        .border-green-brand { border-color: #064e3b; }
         
         .transition-fast { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
@@ -23,7 +26,14 @@
         .modal-scale { transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out; }
         .modal-active .modal-scale { transform: scale(1); opacity: 1; }
 
-        .hero-search { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle at top, #fff 0%, #fff7ed 100%); }
+        .hero-search { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            background: radial-gradient(circle at top, #fff 0%, #f0fdf4 100%); 
+        }
     </style>
 </head>
 <body>
@@ -31,17 +41,17 @@
     <section id="search-screen" class="hero-search px-6 py-12">
         <div class="max-w-4xl w-full text-center fade-in">
             <h1 class="text-5xl md:text-8xl font-black text-gray-900 mb-6 tracking-tighter leading-none">
-                BUSCA TU <span class="text-orange-brand">OFERTA</span>
+                BUSCA TU <span class="text-green-brand">OFERTA</span>
             </h1>
             <p class="text-lg md:text-xl text-gray-400 mb-10">Stock limitado por cierre de aduana.</p>
             
-            <div class="relative max-w-2xl mx-auto shadow-2xl rounded-3xl overflow-hidden border-4 border-orange-brand bg-white">
+            <div class="relative max-w-2xl mx-auto shadow-2xl rounded-3xl overflow-hidden border-4 border-green-brand bg-white">
                 <div class="flex flex-col md:flex-row">
                     <input type="text" id="main-input" placeholder="¿Qué deseas comprar?" 
                         class="w-full px-6 py-5 md:py-7 text-xl md:text-2xl border-none focus:ring-0 outline-none"
                         onkeyup="checkSearch(event)">
-                    <button onclick="revealCatalog()" class="w-full md:w-auto md:absolute md:right-2 md:top-2 md:bottom-2 px-10 py-4 md:py-0 bg-orange-brand text-white font-black rounded-xl md:rounded-2xl hover-orange-brand transition-fast text-lg">
-                        BUSCAR
+                    <button onclick="revealCatalog()" class="w-full md:w-auto md:absolute md:right-2 md:top-2 md:bottom-2 px-10 py-4 md:py-0 bg-green-brand text-white font-black rounded-xl md:rounded-2xl hover-green-brand transition-fast text-lg uppercase">
+                        Buscar
                     </button>
                 </div>
             </div>
@@ -51,10 +61,10 @@
     <section id="catalog-screen" class="hidden">
         <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
-                <div class="text-xl font-black text-orange-brand tracking-tighter"> <span class="text-gray-900"> </span></div>
+                <div class="text-xl font-black text-green-brand tracking-tighter uppercase italic"> <span class="text-gray-900 underline"> </span></div>
                 <div class="flex items-center space-x-3">
                     <span class="text-[10px] font-bold text-red-600 animate-pulse uppercase">Flash Sale</span>
-                    <div class="h-8 w-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-brand font-bold">🛒</div>
+                    <div class="h-8 w-8 bg-green-50 rounded-full flex items-center justify-center text-green-brand font-bold">🛒</div>
                 </div>
             </div>
         </header>
@@ -73,25 +83,29 @@
             <div class="flex-1 p-6 md:p-12 relative overflow-y-auto bg-white border-l border-gray-50">
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl">&times;</button>
                 
-                <div id="ratings-container" class="mb-4 hidden">
+                <div id="ratings-container" class="mb-4 hidden space-y-2">
                     <div class="flex items-center space-x-2">
-                        <div class="flex text-orange-400 text-sm">★★★★★</div>
+                        <div class="flex text-yellow-500 text-sm">★★★★★</div>
                         <span id="product-revs" class="text-xs text-gray-400 font-bold"></span>
                     </div>
-                    <div id="seller-rating" class="hidden mt-2 pt-2 border-t border-gray-50">
-                        <p class="text-[10px] text-gray-400 uppercase font-black mb-1">Calificación del Vendedor</p>
-                        <div class="flex items-center space-x-2">
-                            <div class="flex text-blue-500 text-sm">★★★★★</div>
-                            <span class="text-xs text-blue-600 font-black">4.9 (4.5k+ calificaciones)</span>
-                        </div>
+                    <div id="seller-rating" class="hidden flex items-center space-x-2 bg-gray-50 p-2 rounded-lg border border-gray-100 w-fit">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Vendedor</span>
+                        <div class="flex text-emerald-600 text-[10px]">★★★★★</div>
+                        <span class="text-[10px] text-gray-600 font-bold">4.5 (3k+ reseñas)</span>
                     </div>
                 </div>
 
                 <h2 id="modalTitle" class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
-                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-orange-brand mb-4"></p>
+                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-green-brand mb-4"></p>
                 <div id="modalDesc" class="text-gray-500 text-sm mb-6 leading-relaxed"></div>
-                <div class="bg-orange-50 text-orange-700 p-4 rounded-2xl text-xs font-bold mb-6 italic">⚡ Oferta de liquidación por cierre de sucursal.</div>
-                <button onclick="showConfirm()" class="w-full bg-orange-brand text-white font-black py-4 rounded-2xl hover-orange-brand transition-fast shadow-xl shadow-orange-200 text-lg uppercase">Comprar ahora</button>
+                
+                <div class="bg-green-50 text-green-800 p-4 rounded-2xl text-xs font-bold mb-6 italic">
+                    ⚡ Oferta de liquidación por cierre de sucursal.
+                </div>
+                
+                <button onclick="showConfirm()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast shadow-xl shadow-green-100 text-lg uppercase">
+                    Comprar ahora
+                </button>
             </div>
         </div>
     </div>
@@ -102,7 +116,7 @@
             <p class="text-gray-500 mb-8 text-sm">Esta acción procesará su pago de forma segura y permanente.</p>
             <div class="flex space-x-4">
                 <button onclick="closeConfirm()" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold text-gray-400 uppercase text-xs">Cancelar</button>
-                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-orange-brand text-white rounded-2xl font-bold uppercase text-xs">Sí, comprar</button>
+                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-green-brand text-white rounded-2xl font-bold uppercase text-xs">Sí, comprar</button>
             </div>
         </div>
     </div>
@@ -116,24 +130,24 @@
     </div>
 
     <script>
-        const products = [
-            { id: 1, name: 'Nova Z-24 Pro Max Ultra', price: '$499.00', url: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800' },
-            { id: 2, name: 'X-Phone 14 Phantom Edition', price: '$420.00', url: 'https://s.alicdn.com/@sc04/kf/Hdf9f84e06f774f7cb01e36d6a22ae5e1Z/Custom-Cell-Phone-Unlocked-Smartphones-Cheap-3G-Generic-Smart-Mobile-Phone-Low-Price-Android-Smartphone-Odm.jpg_300x300.jpg' },
-            { id: 3, name: 'Omni Pixel Gen-8 Obsidian', price: '$350.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuL_2KMB3ASSNyjXhXvWf-Mengtpl98LP8Tg&s' },
-            { id: 4, name: 'Electrax Max Wireless', price: '$180.00', url: 'https://i.ebayimg.com/images/g/dNkAAOSwqt5luY9c/s-l1200.jpg' },
-            { id: 5, name: 'Kinetix 13 Ultra Vision', price: '$390.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn1wOThra4g3w2kH2smzWhYldP7zAy2ZVuZw&s' },
-            { id: 6, name: 'Titan Chrono Watch S2', price: '$250.00', url: 'https://hips.hearstapps.com/hmg-prod/images/apple-watch-ultra-2-set-up-6750636a674e4.jpeg?resize=640:*' },
-            { id: 7, name: 'Void Core Phone (2) Glow', price: '$220.00', url: 'https://www.designboom.com/wp-content/uploads/2023/07/nothing-phone-2-new-glyph-designboom-01.jpg' },
-            { id: 8, name: 'Vantage Xperia Pro-V', price: '$480.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtePYgPtZQPL7D2EF13QU1oYConWNBgBFNWg&s' },
-            { id: 12, name: 'HyperCharge 100W Power', price: '$19.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSzGMaOnKwCySES9IehZBDMMRysoABwvKZPA&s' },
-            { id: 13, name: 'Horizon Sharp 40 Curved Display', price: '$240.00', url: 'https://armoto.vtexassets.com/arquivos/ids/164313-800-800?v=638754262110970000&width=800&height=800&aspect=true', 
+        const products = [  
+            { id: 1, name: 'Nova Z-24 Pro Max Ultra', price: '$499.00', url: 'img/34732.jpg' },
+            { id: 2, name: 'X-Phone 14 Phantom Edition', price: '$420.00', url: 'img/34733.jpg' },
+            { id: 3, name: 'Omni Pixel Gen-8 Obsidian', price: '$350.00', url: 'img/34738.jpg' },
+            { id: 4, name: 'Electrax Max 14', price: '$180.00', url: 'img/43676.jpg' },
+            { id: 5, name: 'Kinetix 13 Ultra Vision', price: '$390.00', url: 'img/1359611_181105-OX1G0W-608.jpg' },
+            { id: 6, name: 'Titan Chrono Watch S2', price: '$250.00', url: 'img/3425273_59975.jpg' },
+            { id: 7, name: 'Void Core Phone (2) Glow', price: '$220.00', url: 'img/10172882.png' },
+            { id: 8, name: 'Vantage Xperia Pro-V', price: '$480.00', url: 'img/95230902_Smart Phone Flat Style.jpg' },
+            { id: 12, name: 'HyperZone Power 1', price: '$19.00', url: 'img/IMG-20260424-WA0028.jpg' },
+            { id: 13, name: 'Horizon Sharp 40 Curved Display', price: '$240.00', url: 'img/smartphone_cartoon.jpg', 
               desc: 'Pantalla pOLED Curva de 144Hz, Procesador Octa-Core de 2.5GHz, 8GB RAM + 256GB Almacenamiento. Cámara Triple de 50MP con OIS y Carga Rápida de 68W TurboPower. Resistente al agua IP68.',
               special: true },
-            { id: 18, name: 'Axis Stabilizer Pro ', price: '$55.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX2r_rsUbixddcZX4ImTuNLYbuDx9TlJ4HmA&s' },
-            { id: 21, name: 'Zenith Mini Smart 10', price: '$320.00', url: 'https://www.cnet.com/a/img/resize/15cf3ce2211f58e0af0074c16dc6a58c919e3fb8/hub/2023/06/28/67b3b6e2-9879-48cf-b9ac-e230a8d72cfb/asus-zenfone-10-cnet-09.jpg?auto=webp&fit=crop&height=1200&width=1200' },
-            { id: 22, name: 'Apex Phone 15 Pro Max 1TB', price: '$17.99', url: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800' },
-            { id: 23, name: 'LinkCore USB Adapter', price: '$5.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz1yBSqHH9t5UmBRXegocQ98bOpba7rb5TiQ&s' },
-            { id: 24, name: 'PureView Screen Kit', price: '$3.00', url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYrbqyaI2jBc0iG9v-95q5qmwPQAZiyR-CvA&s' }
+            { id: 18, name: 'Axis SuperStabilizer Pro ', price: '$55.00', url: 'img/43676.jpg' },
+            { id: 21, name: 'Zenith Mini Smart 10', price: '$320.00', url: 'img/34733.jpg' },
+            { id: 22, name: 'Apex Lazer 808  Ultra 1TB', price: '$17.99', url: 'img/10172882.png' },
+            { id: 23, name: 'LinkCore Omerta T40', price: '$5.00', url: 'img/43676.jpg' },
+            { id: 24, name: 'PureView Screen Kit', price: '$3.00', url: 'img/95230902_Smart Phone Flat Style.jpg' }
         ];
 
         function checkSearch(e) { if (e.key === 'Enter') revealCatalog(); }
@@ -151,17 +165,19 @@
                 const card = document.createElement('div');
                 card.className = "bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-xl transition-fast cursor-pointer group fade-in";
                 card.style.animationDelay = `${index * 0.05}s`;
-                if(p.id === 22) card.className += " border-2 border-red-500 ring-4 ring-red-50";
+                
+                if(p.id === 22) card.className += " border-2 border-green-500 ring-4 ring-green-50";
+                
                 card.onclick = () => openModal(p);
                 card.innerHTML = `
                     <div class="h-56 bg-white overflow-hidden relative p-6 flex items-center justify-center">
                         <img src="${p.url}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-fast">
-                        ${p.id === 22 ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase">Oferta</span>' : ''}
+                        ${p.id === 22 ? '<span class="absolute top-3 left-3 bg-green-900 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase">Oferta</span>' : ''}
                     </div>
                     <div class="p-5 border-t border-gray-50 text-center">
                         <h3 class="font-bold text-gray-900 mb-4 h-10 line-clamp-2 text-sm leading-tight">${p.name}</h3>
                         <div class="flex items-end justify-between">
-                            <span class="text-xl font-black text-orange-brand">${p.price}</span>
+                            <span class="text-xl font-black text-green-brand">${p.price}</span>
                             <div class="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-lg">+</div>
                         </div>
                     </div>`;
@@ -174,18 +190,19 @@
             document.getElementById('modalTitle').innerText = p.name;
             document.getElementById('modalPrice').innerText = p.price;
             document.getElementById('modalImg').src = p.url;
-            document.getElementById('modalDesc').innerText = p.desc || 'Edición limitada con acabado premium. Incluye garantía extendida por 12 meses.';
+            document.getElementById('modalDesc').innerText = p.desc || 'Edición limitada con acabado premium. Incluye garantía extendida por 12 meses directamente con el fabricante.';
             
             const ratingsContainer = document.getElementById('ratings-container');
+            const sellerRating = document.getElementById('seller-rating');
             const revSpan = document.getElementById('product-revs');
-            const sellerBox = document.getElementById('seller-rating');
             
             if(p.id === 13) {
                 ratingsContainer.classList.remove('hidden');
+                sellerRating.classList.remove('hidden');
                 revSpan.innerText = "(1.1k+ calificaciones)";
-                sellerBox.classList.remove('hidden');
             } else {
                 ratingsContainer.classList.add('hidden');
+                sellerRating.classList.add('hidden');
             }
 
             m.classList.remove('hidden');
