@@ -9,10 +9,11 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #ffffff; overflow-x: hidden; }
         
-        .bg-green-brand { background-color: #052e16; } 
-        .text-green-brand { color: #052e16; }
-        .hover-green-brand:hover { background-color: #064e3b; } 
-        .border-green-brand { border-color: #052e16; }
+        /* Nuevo tono de verde solicitado */
+        .bg-green-brand { background-color: #036635; } 
+        .text-green-brand { color: #036635; }
+        .hover-green-brand:hover { background-color: #024d28; } 
+        .border-green-brand { border-color: #036635; }
         
         .transition-fast { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
@@ -22,7 +23,6 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* --- CONTENEDOR DE PRECIO DINÁMICO --- */
         .fire-container {
             position: relative;
             display: inline-flex;
@@ -30,7 +30,6 @@
             justify-content: center;
             padding: 10px 20px;
             z-index: 10;
-            /* El contenedor ahora flota armónicamente */
             animation: floating-price 3s ease-in-out infinite;
         }
 
@@ -43,7 +42,7 @@
             position: absolute;
             top: 50%; 
             left: 50%;
-            transform: translate(-50%, -45%); /* Fuego centrado tras el texto */
+            transform: translate(-50%, -45%);
             width: 200%; 
             height: 280%; 
             z-index: -1; 
@@ -52,7 +51,7 @@
         }
 
         .fire-text {
-            color: #052e16; 
+            color: #036635; 
             font-weight: 900;
             z-index: 10;
             position: relative;
@@ -114,7 +113,7 @@
     <section id="catalog-screen" class="hidden">
         <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
-                <div class="text-xl font-black text-green-brand tracking-tighter uppercase italic underline"> </div>
+                <div class="text-xl font-black text-green-brand tracking-tighter uppercase italic underline italic">Liquidación Tech</div>
                 <div class="flex items-center space-x-3">
                     <span class="text-[10px] font-bold text-red-600 animate-pulse uppercase">Flash Sale</span>
                     <div class="h-8 w-8 bg-green-50 rounded-full flex items-center justify-center text-green-brand font-bold">🛒</div>
@@ -128,43 +127,75 @@
     </section>
 
     <div id="productModal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-sm transition-fast">
-        <div class="modal-scale bg-white rounded-[2rem] md:rounded-[2.5rem] max-w-4xl w-full max-h-[95vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
-            <div class="h-64 md:h-auto md:w-1/2 bg-white flex items-center justify-center p-6">
+        <div class="modal-scale bg-white rounded-[2rem] max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl">
+            <div class="h-48 md:h-auto md:w-1/2 bg-white flex items-center justify-center p-4">
                 <img id="modalImg" src="" class="max-w-full max-h-full object-contain">
             </div>
-            <div class="flex-1 p-6 md:p-12 relative overflow-y-auto bg-white border-l border-gray-50 text-center md:text-left">
+            <div id="modalMainContent" class="flex-1 p-6 md:p-8 relative overflow-y-auto bg-white border-l border-gray-50 flex flex-col">
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl">&times;</button>
-                <h2 id="modalTitle" class="text-3xl md:text-5xl font-black text-gray-900 mb-4 leading-tight"></h2>
                 
-                <div id="modalPriceContainer" class="mb-10 h-32 flex items-center justify-center"></div>
+                <div id="modalBadges" class="mb-2"></div>
                 
-                <div id="modalDesc" class="text-gray-500 text-sm mb-6 leading-relaxed"></div>
-                <button onclick="closeModal()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast text-lg uppercase">
-                    Comprar ahora
-                </button>
+                <h2 id="modalTitle" class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
+                
+                <div id="modalRatings" class="flex items-center space-x-4 mb-4"></div>
+
+                <div id="modalPriceContainer" class="mb-4 h-24 flex items-center justify-center md:justify-start"></div>
+                
+                <div id="modalDesc" class="text-gray-500 text-xs md:text-sm mb-6 leading-relaxed"></div>
+                
+                <div class="mt-auto">
+                    <button onclick="showConfirmStep()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast text-lg uppercase shadow-lg shadow-green-900/20">
+                        Comprar ahora
+                    </button>
+                </div>
+            </div>
+
+            <div id="modalConfirmStep" class="hidden flex-1 p-8 bg-white border-l border-gray-50 flex flex-col items-center justify-center text-center">
+                <h3 class="text-2xl font-black text-gray-900 mb-6">¿Confirmar compra?</h3>
+                <div class="flex flex-col w-full space-y-3">
+                    <button onclick="processPurchase()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast text-lg uppercase">
+                        Sí, comprar
+                    </button>
+                    <button onclick="hideConfirmStep()" class="w-full bg-gray-100 text-gray-500 font-bold py-3 rounded-2xl hover:bg-gray-200 transition-fast text-sm uppercase">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+
+            <div id="modalSuccessStep" class="hidden flex-1 p-8 bg-white border-l border-gray-50 flex flex-col items-center justify-center text-center">
+                <div class="w-20 h-20 bg-green-100 text-green-brand rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce">✓</div>
+                <h3 class="text-3xl font-black text-green-brand mb-2">¡EXITOSA!</h3>
+                <p class="text-gray-500 font-medium">Procesando tu orden...</p>
             </div>
         </div>
     </div>
 
     <script>
         const products = [  
-            { id: 1, name: ' ', price: '$499.00', url: 'img/34732.jpg' },
-            { id: 2, name: ' ', price: '$420.00', url: 'img/34733.jpg' },
-            { id: 3, name: ' ', price: '$350.00', url: 'img/34738.jpg' },
-            { id: 4, name: ' ', price: '$280.00', url: 'img/43676.jpg' },
-            { id: 5, name: ' ', price: '$390.00', url: 'img/1359611_181105-OX1G0W-608.jpg' },
-            { id: 6, name: ' ', price: '$250.00', url: 'img/3425273_59975.jpg' },
+            { id: 1, name: '', price: '$499.00', url: 'img/34732.jpg' },
+            { id: 2, name: '', price: '$420.00', url: 'img/34733.jpg' },
+            { id: 3, name: '', price: '$350.00', url: 'img/34738.jpg' },
+            { id: 4, name: '', price: '$280.00', url: 'img/43676.jpg' },
+            { id: 5, name: '', price: '$390.00', url: 'img/1359611_181105-OX1G0W-608.jpg' },
+            { id: 6, name: '', price: '$250.00', url: 'img/3425273_59975.jpg' },
             { id: 7, name: ' ', price: '$650.00', url: 'img/10172882.png' },
-            { id: 8, name: ' ', price: '$480.00', url: 'img/95230902_Smart Phone Flat Style.jpg' },
-            { id: 12, name: ' ', price: '$285.00', url: 'img/IMG-20260424-WA0028.jpg' },
-            { id: 13, name: ' ', price: '$240.00', url: 'img/smartphone_cartoon.jpg', 
-              desc: 'Pantalla pOLED Curva de 144Hz, Procesador Octa-Core de 2.5GHz, 8GB RAM + 256GB Almacenamiento. Cámara Triple de 50MP con OIS y Carga Rápida de 68W TurboPower. Resistente al agua IP68.',
-              special: true },
-            { id: 18, name: ' ', price: '$275.00', url: 'img/43676.jpg' },
-            { id: 21, name: ' ', price: '$320.00', url: 'img/34733.jpg' },
+            { id: 8, name: '', price: '$480.00', url: 'img/95230902_Smart Phone Flat Style.jpg' },
+            { id: 12, name: '', price: '$285.00', url: 'img/IMG-20260424-WA0028.jpg' },
+            { id: 13, 
+              name: '', 
+              price: '$240.00', 
+              url: 'img/smartphone_cartoon.jpg', 
+              desc: 'Núcleo Quantum-X de 4.8GHz con arquitectura de silicio líquido. Memoria Hyper-Flow de 18GB y almacenamiento de fotones de 512GB. Sensor óptico de retina con captura en 12K y recarga por inducción atmosférica en 5 minutos. Chasis de grafeno reforzado.',
+              productStars: '1k+',
+              sellerStars: '3k+',
+              special: true 
+            },
+            { id: 18, name: '', price: '$275.00', url: 'img/43676.jpg' },
+            { id: 21, name: '', price: '$320.00', url: 'img/34733.jpg' },
             { id: 22, name: 'Telefono nuevo', price: '$17.99', url: 'img/10172882.png' },
-            { id: 23, name: ' ', price: '$300.00', url: 'img/43676.jpg' },
-            { id: 24, name: ' ', price: '$315.00', url: 'img/95230902_Smart Phone Flat Style.jpg' }
+            { id: 23, name: '', price: '$300.00', url: 'img/43676.jpg' },
+            { id: 24, name: '', price: '$315.00', url: 'img/95230902_Smart Phone Flat Style.jpg' }
         ];
 
         function checkSearch(e) { if (e.key === 'Enter') revealCatalog(); }
@@ -187,35 +218,26 @@
 
             createParticle() {
                 const x = this.w * 0.5 + (Math.random() - 0.5) * (this.w * 0.5);
-                const y = this.h * 0.52; // Nace justo tras el texto
+                const y = this.h * 0.52;
                 this.particles.push({
-                    x: x,
-                    y: y,
+                    x: x, y: y,
                     vx: (Math.random() - 0.5) * 2,
                     vy: Math.random() * -4 - 2,
                     life: Math.random() * 20 + 15,
                     size: Math.random() * 14 + 7,
-                    color: Math.random() > 0.15 ? 
-                        `rgba(${255}, ${Math.floor(Math.random() * 120 + 60)}, 0, ` : 
-                        `rgba(60, 60, 60, ` 
+                    color: Math.random() > 0.15 ? `rgba(255, ${Math.floor(Math.random() * 120 + 60)}, 0, ` : `rgba(60, 60, 60, ` 
                 });
             }
 
             update() {
                 this.ctx.clearRect(0, 0, this.w, this.h);
                 for(let i = 0; i < 8; i++) this.createParticle();
-
                 for (let i = this.particles.length - 1; i >= 0; i--) {
                     const p = this.particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
-                    p.size *= 0.89; 
+                    p.x += p.vx; p.y += p.vy; p.life--; p.size *= 0.89; 
                     const opacity = p.life / 25;
-
-                    if (p.life <= 0 || p.size < 1) {
-                        this.particles.splice(i, 1);
-                    } else {
+                    if (p.life <= 0 || p.size < 1) { this.particles.splice(i, 1); } 
+                    else {
                         this.ctx.beginPath();
                         this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                         this.ctx.fillStyle = p.color + opacity + ')';
@@ -232,18 +254,12 @@
             products.forEach((p) => {
                 const card = document.createElement('div');
                 const isSpecial = p.id === 22;
-                
                 card.className = "bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-xl transition-fast cursor-pointer group fade-in";
                 if(isSpecial) card.className += " border-2 border-green-900 extreme-heat ring-8 ring-green-50";
 
                 let priceHTML = `<span class="text-xl font-black text-green-brand">${p.price}</span>`;
-                
                 if(isSpecial) {
-                    priceHTML = `
-                        <div class="fire-container scale-[1.6]">
-                            <canvas id="fireGrid_${p.id}" class="fire-canvas"></canvas>
-                            <span class="fire-text text-3xl">${p.price}</span>
-                        </div>`;
+                    priceHTML = `<div class="fire-container scale-[1.6]"><canvas id="fireGrid_${p.id}" class="fire-canvas"></canvas><span class="fire-text text-3xl">${p.price}</span></div>`;
                 }
 
                 card.onclick = () => openModal(p);
@@ -253,48 +269,45 @@
                         ${isSpecial ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase z-10">OFERTA</span>' : ''}
                     </div>
                     <div class="p-5 border-t border-gray-50 text-center">
-                        <h3 class="font-black text-gray-900 mb-4 line-clamp-2 leading-tight ${isSpecial ? 'text-2xl h-auto' : 'text-sm h-10'}">
-                            ${p.name}
-                        </h3>
+                        <h3 class="font-black text-gray-900 mb-4 line-clamp-2 leading-tight ${isSpecial ? 'text-2xl h-auto' : 'text-sm h-10'}">${p.name}</h3>
                         <div class="flex items-center justify-between relative h-14">
                             ${priceHTML}
                             <div class="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-lg z-10">+</div>
                         </div>
                     </div>`;
                 grid.appendChild(card);
-                
-                if(isSpecial) {
-                    setTimeout(() => {
-                        const engine = new FireEngine(`fireGrid_${p.id}`);
-                        engine.update();
-                    }, 50);
-                }
+                if(isSpecial) setTimeout(() => { const engine = new FireEngine(`fireGrid_${p.id}`); engine.update(); }, 50);
             });
         }
 
         function openModal(p) {
             const m = document.getElementById('productModal');
-            const isSpecial = p.id === 22;
+            hideConfirmStep(); // Resetear vista del modal
+            
+            const isId22 = p.id === 22;
+            const isId13 = p.id === 13;
             
             document.getElementById('modalTitle').innerText = p.name;
-            document.getElementById('modalTitle').className = `font-black text-gray-900 mb-4 leading-tight ${isSpecial ? 'text-5xl' : 'text-3xl'}`;
+            document.getElementById('modalTitle').className = `font-black text-gray-900 mb-1 leading-tight ${isId22 ? 'text-5xl' : 'text-3xl'}`;
             document.getElementById('modalImg').src = p.url;
-            document.getElementById('modalDesc').innerText = p.desc || 'Stock limitado por liquidación de aduana. Precio final garantizado.';
+            document.getElementById('modalDesc').innerText = p.desc || ' ';
             
+            // Reseñas para el ID 13
+            const ratingCont = document.getElementById('modalRatings');
+            ratingCont.innerHTML = isId13 ? `
+                <div class="flex items-center text-yellow-400 text-xs font-bold">⭐⭐⭐⭐⭐ <span class="ml-1 text-gray-400">${p.productStars} reseñas</span></div>
+                <div class="flex items-center text-green-600 text-xs font-bold">👤 Vendedor: <span class="ml-1 text-gray-400">⭐⭐⭐⭐⭐ (${p.sellerStars})</span></div>
+            ` : '';
+
+            // Badges
+            document.getElementById('modalBadges').innerHTML = isId13 ? '<span class="bg-blue-100 text-blue-700 text-[10px] font-black px-2 py-1 rounded-md uppercase">Nuevo Lanzamiento</span>' : '';
+
             const priceContainer = document.getElementById('modalPriceContainer');
-            if(isSpecial) {
-                priceContainer.innerHTML = `
-                    <div class="fire-container scale-[3.2]">
-                        <canvas id="fireModal_${p.id}" class="fire-canvas"></canvas>
-                        <span class="fire-text text-5xl">${p.price}</span>
-                    </div>`;
-                
-                setTimeout(() => {
-                    const engine = new FireEngine(`fireModal_${p.id}`);
-                    engine.update();
-                }, 100);
+            if(isId22) {
+                priceContainer.innerHTML = `<div class="fire-container scale-[2.8]"><canvas id="fireModal_${p.id}" class="fire-canvas"></canvas><span class="fire-text text-5xl">${p.price}</span></div>`;
+                setTimeout(() => { const engine = new FireEngine(`fireModal_${p.id}`); engine.update(); }, 100);
             } else {
-                priceContainer.innerHTML = `<span class="text-4xl font-black text-green-brand">${p.price}</span>`;
+                priceContainer.innerHTML = `<span class="text-5xl font-black text-green-brand">${p.price}</span>`;
             }
 
             m.classList.remove('hidden');
@@ -302,10 +315,34 @@
             document.body.style.overflow = 'hidden';
         }
 
+        function showConfirmStep() {
+            document.getElementById('modalMainContent').classList.add('hidden');
+            document.getElementById('modalConfirmStep').classList.remove('hidden');
+        }
+
+        function hideConfirmStep() {
+            document.getElementById('modalMainContent').classList.remove('hidden');
+            document.getElementById('modalConfirmStep').classList.add('hidden');
+            document.getElementById('modalSuccessStep').classList.add('hidden');
+        }
+
+        function processPurchase() {
+            document.getElementById('modalConfirmStep').classList.add('hidden');
+            document.getElementById('modalSuccessStep').classList.remove('hidden');
+            
+            // Regresar al catálogo automáticamente después de 1.8 segundos
+            setTimeout(() => {
+                closeModal();
+            }, 1800);
+        }
+
         function closeModal() {
             const m = document.getElementById('productModal');
             m.classList.remove('modal-active');
-            setTimeout(() => m.classList.add('hidden'), 200);
+            setTimeout(() => {
+                m.classList.add('hidden');
+                hideConfirmStep();
+            }, 200);
             document.body.style.overflow = 'auto';
         }
     </script>
