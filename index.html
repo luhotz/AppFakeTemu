@@ -9,11 +9,10 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #ffffff; overflow-x: hidden; }
         
-
-        .bg-green-brand { background-color: #064e3b; } 
-        .text-green-brand { color: #064e3b; }
-        .hover-green-brand:hover { background-color: #065f46; } 
-        .border-green-brand { border-color: #064e3b; }
+        .bg-green-brand { background-color: #052e16; } 
+        .text-green-brand { color: #052e16; }
+        .hover-green-brand:hover { background-color: #064e3b; } 
+        .border-green-brand { border-color: #052e16; }
         
         .transition-fast { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
@@ -21,6 +20,60 @@
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* --- CONTENEDOR DE PRECIO DINÁMICO --- */
+        .fire-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            z-index: 10;
+            /* El contenedor ahora flota armónicamente */
+            animation: floating-price 3s ease-in-out infinite;
+        }
+
+        @keyframes floating-price {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(1deg); }
+        }
+
+        .fire-canvas {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -45%); /* Fuego centrado tras el texto */
+            width: 200%; 
+            height: 280%; 
+            z-index: -1; 
+            pointer-events: none; 
+            filter: blur(1px) contrast(1.1);
+        }
+
+        .fire-text {
+            color: #052e16; 
+            font-weight: 900;
+            z-index: 10;
+            position: relative;
+            animation: text-shiver 0.15s infinite alternate;
+        }
+
+        @keyframes text-shiver {
+            from { transform: translateX(-0.5px) scale(1); filter: brightness(1); }
+            to { transform: translateX(0.5px) scale(1.05); filter: brightness(1.3); }
+        }
+
+        .extreme-heat {
+            animation: war-vibration 0.4s infinite linear;
+            box-shadow: 0 0 55px rgba(36, 212, 59, 0.4) !important;
+        }
+
+        @keyframes war-vibration {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(0.3deg); }
+            75% { transform: rotate(-0.3deg); }
+            100% { transform: rotate(0deg); }
         }
 
         .modal-scale { transform: scale(0.95); opacity: 0; transition: all 0.2s ease-out; }
@@ -61,7 +114,7 @@
     <section id="catalog-screen" class="hidden">
         <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
-                <div class="text-xl font-black text-green-brand tracking-tighter uppercase italic"> <span class="text-gray-900 underline"> </span></div>
+                <div class="text-xl font-black text-green-brand tracking-tighter uppercase italic underline"> </div>
                 <div class="flex items-center space-x-3">
                     <span class="text-[10px] font-bold text-red-600 animate-pulse uppercase">Flash Sale</span>
                     <div class="h-8 w-8 bg-green-50 rounded-full flex items-center justify-center text-green-brand font-bold">🛒</div>
@@ -71,7 +124,6 @@
 
         <main class="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 fade-in">
             <div id="main-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"></div>
-            <div class="mt-16 py-10 text-center text-gray-300 font-bold uppercase tracking-widest border-t border-gray-100 text-xs">Fin del catálogo</div>
         </main>
     </section>
 
@@ -80,57 +132,22 @@
             <div class="h-64 md:h-auto md:w-1/2 bg-white flex items-center justify-center p-6">
                 <img id="modalImg" src="" class="max-w-full max-h-full object-contain">
             </div>
-            <div class="flex-1 p-6 md:p-12 relative overflow-y-auto bg-white border-l border-gray-50">
+            <div class="flex-1 p-6 md:p-12 relative overflow-y-auto bg-white border-l border-gray-50 text-center md:text-left">
                 <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 text-3xl">&times;</button>
+                <h2 id="modalTitle" class="text-3xl md:text-5xl font-black text-gray-900 mb-4 leading-tight"></h2>
                 
-                <div id="ratings-container" class="mb-4 hidden space-y-2">
-                    <div class="flex items-center space-x-2">
-                        <div class="flex text-yellow-500 text-sm">★★★★★</div>
-                        <span id="product-revs" class="text-xs text-gray-400 font-bold"></span>
-                    </div>
-                    <div id="seller-rating" class="hidden flex items-center space-x-2 bg-gray-50 p-2 rounded-lg border border-gray-100 w-fit">
-                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Vendedor</span>
-                        <div class="flex text-emerald-600 text-[10px]">★★★★★</div>
-                        <span class="text-[10px] text-gray-600 font-bold">4.5 (3k+ reseñas)</span>
-                    </div>
-                </div>
-
-                <h2 id="modalTitle" class="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
-                <p id="modalPrice" class="text-4xl md:text-5xl font-black text-green-brand mb-4"></p>
+                <div id="modalPriceContainer" class="mb-10 h-32 flex items-center justify-center"></div>
+                
                 <div id="modalDesc" class="text-gray-500 text-sm mb-6 leading-relaxed"></div>
-                
-                <div class="bg-green-50 text-green-800 p-4 rounded-2xl text-xs font-bold mb-6 italic">
-                    ⚡ Oferta de liquidación por cierre de sucursal.
-                </div>
-                
-                <button onclick="showConfirm()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast shadow-xl shadow-green-100 text-lg uppercase">
+                <button onclick="closeModal()" class="w-full bg-green-brand text-white font-black py-4 rounded-2xl hover-green-brand transition-fast text-lg uppercase">
                     Comprar ahora
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="confirmModal" class="fixed inset-0 bg-black/60 hidden z-[70] flex items-center justify-center p-4 backdrop-blur-sm transition-fast">
-        <div class="modal-scale bg-white rounded-3xl p-8 max-w-sm w-full text-center">
-            <h3 class="text-xl font-bold mb-4 uppercase">¿Confirmar pedido?</h3>
-            <p class="text-gray-500 mb-8 text-sm">Esta acción procesará su pago de forma segura y permanente.</p>
-            <div class="flex space-x-4">
-                <button onclick="closeConfirm()" class="flex-1 py-4 bg-gray-100 rounded-2xl font-bold text-gray-400 uppercase text-xs">Cancelar</button>
-                <button onclick="processFinalBuy()" class="flex-1 py-4 bg-green-brand text-white rounded-2xl font-bold uppercase text-xs">Sí, comprar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="successModal" class="fixed inset-0 bg-black/60 hidden z-[80] flex items-center justify-center p-4 backdrop-blur-sm transition-fast">
-        <div class="modal-scale bg-white rounded-[2.5rem] p-10 max-w-sm w-full text-center">
-            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl animate-bounce">✓</div>
-            <h3 class="text-2xl font-black mb-2 uppercase">PAGO RECIBIDO</h3>
-            <p class="text-gray-400 italic text-sm">Actualizando catálogo...</p>
-        </div>
-    </div>
-
     <script>
-const products = [  
+        const products = [  
             { id: 1, name: ' ', price: '$499.00', url: 'img/34732.jpg' },
             { id: 2, name: ' ', price: '$420.00', url: 'img/34733.jpg' },
             { id: 3, name: ' ', price: '$350.00', url: 'img/34738.jpg' },
@@ -145,7 +162,7 @@ const products = [
               special: true },
             { id: 18, name: ' ', price: '$275.00', url: 'img/43676.jpg' },
             { id: 21, name: ' ', price: '$320.00', url: 'img/34733.jpg' },
-            { id: 22, name: 'Apex Lazer 808  Ultra 1TB', price: '$17.99', url: 'img/10172882.png' },
+            { id: 22, name: 'Telefono nuevo', price: '$17.99', url: 'img/10172882.png' },
             { id: 23, name: ' ', price: '$300.00', url: 'img/43676.jpg' },
             { id: 24, name: ' ', price: '$315.00', url: 'img/95230902_Smart Phone Flat Style.jpg' }
         ];
@@ -158,51 +175,126 @@ const products = [
             renderGrid();
         }
 
+        class FireEngine {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.w = this.canvas.width = this.canvas.offsetWidth;
+                this.h = this.canvas.height = this.canvas.offsetHeight;
+            }
+
+            createParticle() {
+                const x = this.w * 0.5 + (Math.random() - 0.5) * (this.w * 0.5);
+                const y = this.h * 0.52; // Nace justo tras el texto
+                this.particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: Math.random() * -4 - 2,
+                    life: Math.random() * 20 + 15,
+                    size: Math.random() * 14 + 7,
+                    color: Math.random() > 0.15 ? 
+                        `rgba(${255}, ${Math.floor(Math.random() * 120 + 60)}, 0, ` : 
+                        `rgba(60, 60, 60, ` 
+                });
+            }
+
+            update() {
+                this.ctx.clearRect(0, 0, this.w, this.h);
+                for(let i = 0; i < 8; i++) this.createParticle();
+
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    p.size *= 0.89; 
+                    const opacity = p.life / 25;
+
+                    if (p.life <= 0 || p.size < 1) {
+                        this.particles.splice(i, 1);
+                    } else {
+                        this.ctx.beginPath();
+                        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        this.ctx.fillStyle = p.color + opacity + ')';
+                        this.ctx.fill();
+                    }
+                }
+                requestAnimationFrame(() => this.update());
+            }
+        }
+
         function renderGrid() {
             const grid = document.getElementById('main-grid');
             grid.innerHTML = '';
-            products.forEach((p, index) => {
+            products.forEach((p) => {
                 const card = document.createElement('div');
+                const isSpecial = p.id === 22;
+                
                 card.className = "bg-white border border-gray-100 rounded-[2rem] overflow-hidden hover:shadow-xl transition-fast cursor-pointer group fade-in";
-                card.style.animationDelay = `${index * 0.05}s`;
+                if(isSpecial) card.className += " border-2 border-green-900 extreme-heat ring-8 ring-green-50";
+
+                let priceHTML = `<span class="text-xl font-black text-green-brand">${p.price}</span>`;
                 
-                if(p.id === 22) card.className += " border-2 border-green-500 ring-4 ring-green-50";
-                
+                if(isSpecial) {
+                    priceHTML = `
+                        <div class="fire-container scale-[1.6]">
+                            <canvas id="fireGrid_${p.id}" class="fire-canvas"></canvas>
+                            <span class="fire-text text-3xl">${p.price}</span>
+                        </div>`;
+                }
+
                 card.onclick = () => openModal(p);
                 card.innerHTML = `
                     <div class="h-56 bg-white overflow-hidden relative p-6 flex items-center justify-center">
                         <img src="${p.url}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-fast">
-                        ${p.id === 22 ? '<span class="absolute top-3 left-3 bg-green-900 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase">Oferta</span>' : ''}
+                        ${isSpecial ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[9px] font-black px-3 py-1 rounded-full animate-bounce uppercase z-10">OFERTA</span>' : ''}
                     </div>
                     <div class="p-5 border-t border-gray-50 text-center">
-                        <h3 class="font-bold text-gray-900 mb-4 h-10 line-clamp-2 text-sm leading-tight">${p.name}</h3>
-                        <div class="flex items-end justify-between">
-                            <span class="text-xl font-black text-green-brand">${p.price}</span>
-                            <div class="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-lg">+</div>
+                        <h3 class="font-black text-gray-900 mb-4 line-clamp-2 leading-tight ${isSpecial ? 'text-2xl h-auto' : 'text-sm h-10'}">
+                            ${p.name}
+                        </h3>
+                        <div class="flex items-center justify-between relative h-14">
+                            ${priceHTML}
+                            <div class="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-lg z-10">+</div>
                         </div>
                     </div>`;
                 grid.appendChild(card);
+                
+                if(isSpecial) {
+                    setTimeout(() => {
+                        const engine = new FireEngine(`fireGrid_${p.id}`);
+                        engine.update();
+                    }, 50);
+                }
             });
         }
 
         function openModal(p) {
             const m = document.getElementById('productModal');
+            const isSpecial = p.id === 22;
+            
             document.getElementById('modalTitle').innerText = p.name;
-            document.getElementById('modalPrice').innerText = p.price;
+            document.getElementById('modalTitle').className = `font-black text-gray-900 mb-4 leading-tight ${isSpecial ? 'text-5xl' : 'text-3xl'}`;
             document.getElementById('modalImg').src = p.url;
-            document.getElementById('modalDesc').innerText = p.desc || 'Edición limitada con acabado premium. Incluye garantía extendida por 12 meses directamente con el fabricante.';
+            document.getElementById('modalDesc').innerText = p.desc || 'Stock limitado por liquidación de aduana. Precio final garantizado.';
             
-            const ratingsContainer = document.getElementById('ratings-container');
-            const sellerRating = document.getElementById('seller-rating');
-            const revSpan = document.getElementById('product-revs');
-            
-            if(p.id === 13) {
-                ratingsContainer.classList.remove('hidden');
-                sellerRating.classList.remove('hidden');
-                revSpan.innerText = "(1.1k+ calificaciones)";
+            const priceContainer = document.getElementById('modalPriceContainer');
+            if(isSpecial) {
+                priceContainer.innerHTML = `
+                    <div class="fire-container scale-[3.2]">
+                        <canvas id="fireModal_${p.id}" class="fire-canvas"></canvas>
+                        <span class="fire-text text-5xl">${p.price}</span>
+                    </div>`;
+                
+                setTimeout(() => {
+                    const engine = new FireEngine(`fireModal_${p.id}`);
+                    engine.update();
+                }, 100);
             } else {
-                ratingsContainer.classList.add('hidden');
-                sellerRating.classList.add('hidden');
+                priceContainer.innerHTML = `<span class="text-4xl font-black text-green-brand">${p.price}</span>`;
             }
 
             m.classList.remove('hidden');
@@ -215,37 +307,6 @@ const products = [
             m.classList.remove('modal-active');
             setTimeout(() => m.classList.add('hidden'), 200);
             document.body.style.overflow = 'auto';
-        }
-
-        function showConfirm() {
-            const m = document.getElementById('confirmModal');
-            m.classList.remove('hidden');
-            setTimeout(() => m.classList.add('modal-active'), 10);
-        }
-
-        function closeConfirm() {
-            const m = document.getElementById('confirmModal');
-            m.classList.remove('modal-active');
-            setTimeout(() => m.classList.add('hidden'), 200);
-        }
-
-        function processFinalBuy() {
-            closeConfirm();
-            const s = document.getElementById('successModal');
-            s.classList.remove('hidden');
-            setTimeout(() => s.classList.add('modal-active'), 10);
-            setTimeout(() => {
-                s.classList.remove('modal-active');
-                setTimeout(() => {
-                    s.classList.add('hidden');
-                    const pm = document.getElementById('productModal');
-                    pm.classList.remove('modal-active');
-                    setTimeout(() => {
-                        pm.classList.add('hidden');
-                        document.body.style.overflow = 'auto';
-                    }, 200);
-                }, 200);
-            }, 2000);
         }
     </script>
 </body>
